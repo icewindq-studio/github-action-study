@@ -1,6 +1,6 @@
 {
     "imageName": "bloger",
-    "imageTag": "dev-v2023",
+    "imageTag": "live-1.2.0",
     "imageRepo": "ghcr.io",
     "description": "test BREAKING CHANGE"
 }
