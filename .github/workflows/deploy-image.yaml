@@ -86,7 +86,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Conventional Changelog Action
+      - name: generate next version
         id: next-version
         uses: TriPSs/conventional-changelog-action@v5
         with:
