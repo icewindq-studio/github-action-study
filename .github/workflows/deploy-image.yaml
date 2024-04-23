@@ -90,7 +90,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # fix: test2
+      # fix: test tag when remove tag on remote repo
       - name: generate next version
         id: next-version
         uses: TriPSs/conventional-changelog-action@v5
