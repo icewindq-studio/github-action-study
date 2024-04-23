@@ -94,7 +94,7 @@ jobs:
           skip-on-empty: "false"
           skip-commit: "true"
           output-file: "false"
-          tag-prefix: 'release-v'
+          tag-prefix: 'api-v'
           fallback-version: '1.0.0'
 
       - name: Build and push release api components
