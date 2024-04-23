@@ -2,5 +2,5 @@
     "imageName": "bloger",
     "imageTag": "dev-v2023",
     "imageRepo": "ghcr.io",
-    "description": "test"
+    "description": "test BREAKING CHANGE"
 }
