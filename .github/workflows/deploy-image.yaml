@@ -90,7 +90,8 @@ jobs:
         id: next-version
         uses: TriPSs/conventional-changelog-action@v5
         with:
-          github-token: ${{ secrets.github_token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          skip-on-empty: "false"
           skip-commit: "true"
           output-file: "false"
           tag-prefix: 'release-v'
