@@ -149,6 +149,6 @@ jobs:
           add-paths: |
             src/*
           commit-message: PR for live release, created by github actions bot
-          delete-branch: true
+          # delete-branch: true
           assignees: ${{ github.actor }}
           reviewers: icewindq-liu
