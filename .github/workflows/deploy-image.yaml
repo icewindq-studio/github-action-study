@@ -147,7 +147,7 @@ jobs:
           title: backend live release
           labels: release
           add-paths: |
-            deploy/live/*
+            src/*
           commit-message: PR for live release, created by github actions bot
           delete-branch: true
           assignees: ${{ github.actor }}
