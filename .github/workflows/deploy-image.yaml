@@ -11,10 +11,8 @@ on:
     branches:
       - main
     types: [ opened, synchronize, reopened, closed, edited ]
-    paths:
-      - 'src/node/evc-signaling/**'
-      - '.github/workflows/node-build-publish.yaml'
-      - '.github/workflows/node-deploy.yaml'
+    paths-ignore:
+      - 'deploy/**'
 # concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
