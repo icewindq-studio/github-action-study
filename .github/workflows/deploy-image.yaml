@@ -7,6 +7,14 @@ on:
     branches: ['main']
     paths-ignore:
       - 'deploy/**'
+  pull_request:
+    branches:
+      - main
+    types: [ opened, synchronize, reopened, closed, edited ]
+    paths:
+      - 'src/node/evc-signaling/**'
+      - '.github/workflows/node-build-publish.yaml'
+      - '.github/workflows/node-deploy.yaml'
 # concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -30,6 +38,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: debug step
+        run: |
+          echo ${{ github.event }} ${{ github.event_name }}
+          echo ${{ github.ref }} ${{ github.ref_name}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.3.0
