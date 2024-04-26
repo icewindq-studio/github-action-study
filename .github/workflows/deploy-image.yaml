@@ -106,6 +106,7 @@ jobs:
       # fix: test tag when remove tag on remote repo
       - name: generate next version
         id: next-version
+        if: ${{ env.NEED_DEPLOY == 'true'}}
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -114,13 +115,14 @@ jobs:
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
+          # skip-tag: ${{ env.NEED_DEPLOY == 'false'}}
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
         with:
           context: .
           target: bloger_release
-          push: true
+          push: ${{ env.NEED_DEPLOY == 'true'}}
           build-args: |
             NUGET_AUTH_USER=${{ github.repository_owner }}
             NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
@@ -133,7 +135,7 @@ jobs:
         with:
           context: .
           target: bloger_debug
-          push: true
+          push: ${{ env.NEED_DEPLOY == 'true'}}
           build-args: |
             NUGET_AUTH_USER=${{ github.repository_owner }}
             NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
@@ -143,6 +145,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: update dev version
+        if: ${{ env.NEED_DEPLOY == 'true'}}
         run: |
           git pull
           sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"dev-${{ steps.next-version.outputs.version }}\"/" deploy/dev/bloger.json
@@ -151,10 +154,12 @@ jobs:
           git diff --quiet || (git commit -am 'update dev version: ${{ steps.next-version.outputs.version }}' && git push origin main)
 
       - name: change live version locally
+        if: ${{ env.NEED_DEPLOY == 'true'}}
         run: |
           sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"live-${{ steps.next-version.outputs.version }}\"/" deploy/live/bloger.json \
 
       - name: create PR for live env
+        if: ${{ env.NEED_DEPLOY == 'true'}}
         uses: peter-evans/create-pull-request@v6
         with:
           title: backend live release
