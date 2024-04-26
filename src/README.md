@@ -1,1 +1,1 @@
-test PR event
+test PR event, on default type
