@@ -114,6 +114,9 @@ jobs:
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
+          git-path:
+            - src/*
+            - deploy/*
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
