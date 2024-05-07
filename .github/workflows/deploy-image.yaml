@@ -104,7 +104,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # fix: test tag when remove tag on remote repo
-      # test muitiple git-path
+      # test muitiple git-path 
       - name: generate next version
         id: next-version
         uses: TriPSs/conventional-changelog-action@v5
@@ -115,7 +115,7 @@ jobs:
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
-          git-path: "src deploy .githhub"
+          # git-path: "src deploy .githhub"
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
