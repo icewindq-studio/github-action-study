@@ -108,7 +108,7 @@ jobs:
       # test muitiple git-path 
       - name: generate next version
         id: next-version
-        if: ${{ env.NEED_DEPLOY == 'true'}}
+        # if: ${{ env.NEED_DEPLOY == 'true'}}
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
