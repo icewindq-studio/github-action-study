@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: debug step
-        if: env.NEED_DEPLOY == 'true'
+        # if: env.NEED_DEPLOY == 'true'
         run: |
           echo ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
