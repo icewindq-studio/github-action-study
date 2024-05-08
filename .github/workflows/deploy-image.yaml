@@ -113,8 +113,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           skip-on-empty: "false"
-          skip-commit: "false"
-          skip-tag: "false"
+          # skip-commit: "false"
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
