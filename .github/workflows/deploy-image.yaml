@@ -36,14 +36,17 @@ jobs:
       # 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: debug step
         # if: env.NEED_DEPLOY == 'true'
         run: |
           echo ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
-          git tag
+          echo ${{ github.base_ref }} ${{ github.head_ref}}
+          git branch
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.3.0
@@ -112,13 +115,15 @@ jobs:
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-branch: ${{ github.head_ref }}
           skip-on-empty: "false"
+          create-summary: true
           # skip-commit: "false"
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
           git-path: src
-          # skip-tag: ${{ env.NEED_DEPLOY == 'false'}}
+          skip-tag: ${{ env.NEED_DEPLOY == 'false'}}
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
