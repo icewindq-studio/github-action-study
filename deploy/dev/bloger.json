@@ -1,5 +1,5 @@
 {
     "imageName": "bloger",
-    "imageTag": "dev-1.4.1",
+    "imageTag": "dev-1.4.2",
     "imageRepo": "ghcr.io"
 }
