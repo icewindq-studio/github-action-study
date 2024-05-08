@@ -37,8 +37,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: debug step
         if: env.NEED_DEPLOY
@@ -114,7 +112,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           skip-on-empty: "false"
-          skip-commit: "true"
+          skip-commit: "false"
+          skip-tag: "false"
           output-file: "false"
           tag-prefix: 'api-v'
           fallback-version: '1.0.0'
