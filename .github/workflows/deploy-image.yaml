@@ -43,7 +43,7 @@ jobs:
       - name: debug step
         if: env.NEED_DEPLOY
         run: |
-          echo ${{ github.event }} ${{ github.event_name }}
+          echo ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
           git tag
 
