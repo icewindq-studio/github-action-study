@@ -46,7 +46,6 @@ jobs:
         run: |
           echo ${{ github.event }} ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
-          git log
           git tag
 
       - name: Set up Docker Buildx
