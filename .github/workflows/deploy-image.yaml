@@ -27,6 +27,7 @@ env:
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
   create_tag:
+    if: github.ref_name == 'main'
     name: "Create tag"
     runs-on: ubuntu-latest
     permissions:
@@ -43,7 +44,7 @@ jobs:
       # test muitiple git-path 
       - name: generate next version
         id: next-version
-        if: github.ref_name == 'main'
+        # if: github.ref_name == 'main'
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
