@@ -27,7 +27,6 @@ env:
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
   create_tag:
-    if: github.ref_name == 'main'
     name: "Create tag"
     runs-on: ubuntu-latest
     permissions:
@@ -36,6 +35,7 @@ jobs:
         next_release_tag: ${{ steps.next-version.outputs.tag || 'pull-request' }}
     steps:
       - name: Checkout
+        if: github.ref_name == 'main'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -43,8 +43,8 @@ jobs:
       # fix: test tag when remove tag on remote repo
       # test muitiple git-path 
       - name: generate next version
+        if: github.ref_name == 'main'
         id: next-version
-        # if: github.ref_name == 'main'
         uses: TriPSs/conventional-changelog-action@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
