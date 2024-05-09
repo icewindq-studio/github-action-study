@@ -26,7 +26,39 @@ env:
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
+  create_tag:
+    name: "Create tag"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+        next_release_tag: ${{ steps.next-version.outputs.tag || 'pull-request' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # fix: test tag when remove tag on remote repo
+      # test muitiple git-path 
+      - name: generate next version
+        id: next-version
+        # if: ${{ env.NEED_DEPLOY == 'true'}}
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          git-branch: ${{ github.head_ref }}
+          skip-on-empty: "false"
+          create-summary: true
+          # skip-commit: "false"
+          output-file: "false"
+          tag-prefix: 'api-v'
+          fallback-version: '1.0.0'
+          git-path: src
+          skip-tag: ${{ env.NEED_DEPLOY == 'false'}}
+
   build-and-push-image:
+    needs: create_tag
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
@@ -107,24 +139,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # fix: test tag when remove tag on remote repo
-      # test muitiple git-path 
-      - name: generate next version
-        id: next-version
-        # if: ${{ env.NEED_DEPLOY == 'true'}}
-        uses: TriPSs/conventional-changelog-action@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          git-branch: ${{ github.head_ref }}
-          skip-on-empty: "false"
-          create-summary: true
-          # skip-commit: "false"
-          output-file: "false"
-          tag-prefix: 'api-v'
-          fallback-version: '1.0.0'
-          git-path: src
-          skip-tag: ${{ env.NEED_DEPLOY == 'false'}}
-
       - name: Build and push release api components
         uses: docker/build-push-action@v5
         with:
@@ -135,7 +149,7 @@ jobs:
             NUGET_AUTH_USER=${{ github.repository_owner }}
             NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/bloger:release-${{ steps.next-version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/bloger:release-${{ needs.create_tag.outputs.next_release_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Build and push debug api components
@@ -148,7 +162,7 @@ jobs:
             NUGET_AUTH_USER=${{ github.repository_owner }}
             NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/bloger:dev-${{ steps.next-version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/bloger:dev-${{ needs.create_tag.outputs.next_release_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -156,15 +170,15 @@ jobs:
         if: ${{ env.NEED_DEPLOY == 'true'}}
         run: |
           git pull
-          sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"dev-${{ steps.next-version.outputs.version }}\"/" deploy/dev/bloger.json
+          sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"dev-${{ needs.create_tag.outputs.next_release_tag }}\"/" deploy/dev/bloger.json
           git config --local user.email "actions-bot@users.noreply.github.com"
           git config --local user.name "actions-bot"
-          git diff --quiet || (git commit -am 'update dev version: ${{ steps.next-version.outputs.version }}' && git push origin main)
+          git diff --quiet || (git commit -am 'update dev version: ${{ needs.create_tag.outputs.next_release_tag }}' && git push origin main)
 
       - name: change live version locally
         if: ${{ env.NEED_DEPLOY == 'true'}}
         run: |
-          sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"live-${{ steps.next-version.outputs.version }}\"/" deploy/live/bloger.json \
+          sed -i -E "s/\"imageTag\": ?\".+\"/\"imageTag\": \"live-${{ needs.create_tag.outputs.next_release_tag }}\"/" deploy/live/bloger.json \
 
       - name: create PR for live env
         if: ${{ env.NEED_DEPLOY == 'true'}}
