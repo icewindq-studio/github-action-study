@@ -195,6 +195,8 @@ jobs:
           reviewers: icewindq-liu
 
   check_version:
+    needs: 
+      - build-and-push-image
     name: check version
     runs-on: ubuntu-latest
     steps:
