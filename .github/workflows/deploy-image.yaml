@@ -4,15 +4,23 @@ name: Create and publish a Docker image
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
   push:
-    branches: ['main']
+    branches: ['release']
     paths-ignore:
       - 'deploy/**'
   pull_request:
     branches:
-      - main
+      - release
     # types: [ opened, synchronize, reopened, closed, edited ]
     paths-ignore:
       - 'deploy/**'
+  workflow_dispatch:
+    inputs:
+      release_action:
+        type: choice
+        description: What do you do?
+        options: 
+        - run-diff
+        - deploy-prod
 # concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -139,6 +147,10 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: run test
+        if: github.event_name == 'workflow_dispatch'
+        run: echo ${{inputs.release_action}}
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
