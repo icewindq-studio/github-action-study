@@ -100,8 +100,10 @@ jobs:
         # if: env.NEED_DEPLOY == 'true'
         env: 
           msg: ${{ github.event.inputs.deploy-action }}
+          msg2: ${{ inputs.deploy-action }}
         run: |
           echo msg: ${{ env.msg }}
+          echo msg2: ${{ env.msg2 }}
           echo ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
           echo ${{ github.base_ref }} ${{ github.head_ref}}
