@@ -15,12 +15,27 @@ on:
       - 'deploy/**'
   workflow_dispatch:
     inputs:
-      release_action:
+      deploy-action:
         type: choice
-        description: What do you do?
+        description: deploy action
+        default: run diff
         options: 
-        - run-diff
-        - deploy-prod
+        - run diff
+        - deploy
+      environment:
+        type: choice
+        description: deploy environment
+        default: dev
+        options: 
+        - dev
+        - prod
+      deploy-region:
+        type: choice
+        description: deploy region
+        default: cn-north-1
+        options: 
+        - cn-north-1
+        - eu-west-1
 # concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -83,7 +98,10 @@ jobs:
 
       - name: debug step
         # if: env.NEED_DEPLOY == 'true'
+        env: 
+          msg: ${{ github.event.inputs.deploy-action }}
         run: |
+          echo msg: ${{ env.msg }}
           echo ${{ github.event_name }}
           echo ${{ github.ref }} ${{ github.ref_name}}
           echo ${{ github.base_ref }} ${{ github.head_ref}}
@@ -150,7 +168,7 @@ jobs:
         
       - name: run test
         if: github.event_name == 'workflow_dispatch'
-        run: echo ${{inputs.release_action}}
+        run: echo ${{inputs.deploy-action}}
 
       - name: Build and push release api components
         uses: docker/build-push-action@v5
