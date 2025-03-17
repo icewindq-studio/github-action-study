@@ -47,7 +47,7 @@ jobs:
         id: next-version
         uses: TriPSs/conventional-changelog-action@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.REPO_BOT_TOKEN }}
           git-branch: ${{ github.head_ref }}
           skip-on-empty: "false"
           create-summary: true
