@@ -7,12 +7,12 @@ on:
     branches: ['main']
     paths-ignore:
       - 'deploy/**'
-  pull_request:
-    branches:
-      - main
-    # types: [ opened, synchronize, reopened, closed, edited ]
-    paths-ignore:
-      - 'deploy/**'
+  # pull_request:
+  #   branches:
+  #     - main
+  #   # types: [ opened, synchronize, reopened, closed, edited ]
+  #   paths-ignore:
+  #     - 'deploy/**'
 # concurrency
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
